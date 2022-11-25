@@ -75,7 +75,6 @@ export const loginHandler = async (
     next: NextFunction
 ) => {
     try {
-
         const user = await findUser({email: req.body.email});
 
         if (!user || !(await user.comparePassword(user.password, req.body.password))) {
