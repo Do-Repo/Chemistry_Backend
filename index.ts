@@ -47,7 +47,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   err.status = err.status || 'error';
   err.statusCode = err.statusCode || 500;
-
+  console.log(err.message)
   res.status(err.statusCode).json({
     status: err.status,
     message: err.message,
