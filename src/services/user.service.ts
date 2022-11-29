@@ -15,6 +15,7 @@ export const createUser = async (input: Partial<User>) => {
 }
 
 export const updateUser = async (id: string, input: Partial<User>) => {
+    console.log(input)
     return await userModel.findByIdAndUpdate
         (id, input, { new: true, runValidators: true }).then((user) => {
             if (!user) {

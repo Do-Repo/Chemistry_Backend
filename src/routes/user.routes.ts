@@ -7,6 +7,7 @@ import { deserializeUser } from '../middleware/deserializeUser';
 import { requireUser } from '../middleware/requireUser';
 import { restrictTo } from '../middleware/restrictTo';
 import { updateProfileHandler, verifyUserHandler } from '../controllers/user.controller';
+import { validate } from '../middleware/validate';
 
 const router = express.Router();
 router.use(deserializeUser, requireUser);
