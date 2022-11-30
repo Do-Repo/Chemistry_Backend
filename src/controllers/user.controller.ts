@@ -33,7 +33,6 @@ export const setProfilePictureHandler = async (
             user,
         });
     }catch (err: any) {
-        console.log(err.message);
         next(err);
     }
     
