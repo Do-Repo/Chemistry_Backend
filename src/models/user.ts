@@ -44,10 +44,10 @@ export class User extends Document {
     @prop({ required: true })
     extras: mongoose.Schema.Types.ObjectId;
 
-    @prop({})
+    @prop({required: true})
     avatarUrl: string;
 
-    @prop({ })
+    @prop({ default: 'null'})
     publicid : string;
 
     async comparePassword(hashedPassword: string, candidatePassword: string) {
