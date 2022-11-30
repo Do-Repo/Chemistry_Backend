@@ -9,7 +9,6 @@ import userRouter from './src/routes/user.routes';
 import authRouter from './src/routes/auth.routes';
 import courseRouter from './src/routes/courses.routes';
 import tagRouter from './src/routes/tags.routes';
-import imageRouter from './src/routes/upload.image.route';
 
 const app = express();
 
@@ -36,7 +35,6 @@ app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/course', courseRouter);
 app.use('/api/tags', tagRouter);
-app.use('/api/upload', imageRouter);
 
 // UnKnown Routes
 app.all('*', (req: Request, res: Response, next: NextFunction) => {

@@ -44,6 +44,12 @@ export class User extends Document {
     @prop({ required: true })
     extras: mongoose.Schema.Types.ObjectId;
 
+    @prop({})
+    avatarUrl: string;
+
+    @prop({ })
+    publicid : string;
+
     async comparePassword(hashedPassword: string, candidatePassword: string) {
         return await bcrypt.compare(candidatePassword, hashedPassword);
     }

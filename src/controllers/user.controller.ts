@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Token }  from "../schema/token.schema"
 import { findAllUsers, updateUser, findUserById } from '../services/user.service';
+import { uploadToCloudinary, removeFromCloudinary } from '../middleware/cloudinary';
 
 export const getMeHandler = (
     req: Request,
@@ -17,6 +18,49 @@ export const getMeHandler = (
         next(err);
     }
 }
+
+export const setProfilePictureHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const data = await uploadToCloudinary(req.file!.path, 'image');
+
+        const user = await updateUser(res.locals.user._id, { avatarUrl: data.url, publicid: data.public_id });
+        res.status(200).json({
+            status: 'success',
+            user,
+        });
+    }catch (err: any) {
+        console.log(err.message);
+        next(err);
+    }
+    
+}
+
+export const deleteProfilePictureHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        
+        const user = await updateUser(res.locals.user._id, { avatarUrl: "" });
+        const publicid = user.publicid;
+        await removeFromCloudinary(publicid);
+        
+        res.status(200).json({
+            status: 'success',
+            user,
+        });
+    }catch (err: any) {
+        next(err);
+    }
+}
+
+
+
 
 export const updateProfileHandler = async (
     req: Request,
