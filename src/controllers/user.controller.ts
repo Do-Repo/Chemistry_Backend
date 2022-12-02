@@ -25,6 +25,7 @@ export const setProfilePictureHandler = async (
     next: NextFunction
 ) => {
     try {
+        console.log(req.body)
         const data = await uploadToCloudinary(req.file!.path, 'image');
 
         const user = await updateUser(res.locals.user._id, { avatarUrl: data.url, publicid: data.public_id });
