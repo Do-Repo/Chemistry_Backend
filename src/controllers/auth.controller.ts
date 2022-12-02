@@ -38,6 +38,7 @@ export const registerHandler = async (
             name: req.body.name,
             phone: req.body.phone,
             extras: extras._id,
+            avatarUrl: 'https://ui-avatars.com/api/?name=' + req.body.name ,
         })
 
         await setOwner(user._id);
@@ -53,9 +54,8 @@ export const registerHandler = async (
         res.status(201).json({
             status: 'success',
             message: (emailSent) ? 'An Email has been sent to verify your account' : "Email could not be sent",
-            data: {
-                user,
-            },
+            user,
+            
         })
     } catch (err: any) {
         console.log(req.body);
