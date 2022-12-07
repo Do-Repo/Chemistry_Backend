@@ -39,6 +39,9 @@ export class Courses {
     @prop({ required: true, default: 0 })
     price: number;
     
+    @prop({ default: 'null' })
+    publicid : string;
+
     @prop({ required: true, default: 0 })
     likes: number;
 }

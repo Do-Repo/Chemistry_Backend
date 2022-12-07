@@ -1,7 +1,8 @@
-import { addLike, removeLike, createCourse, getCourseById, updateContent, deleteCourse, checkIfMine } from '../services/courses.service';
+import { addLike, removeLike, createCourse, getCourseById, updateContent, deleteCourse, checkIfMine, getAllCourses } from '../services/courses.service';
 import { NextFunction, Request, Response } from "express";
 import {  addLikedCourse, removeLikedCourse } from './user.extras.controller';
 import  { User } from '../models/user';
+import { uploadToCloudinary } from '../middleware/cloudinary';
 
 
 
@@ -11,11 +12,13 @@ export const postCourseHandler = async (
     next: NextFunction
 ) => {
     try {
+        const data = await uploadToCloudinary(req.file!.path, 'image');       
         const courses = await createCourse({
             owner: res.locals.user._id,
             title: req.body.title,
             content: req.body.content,
-            thumbnail: req.body.thumbnail,
+            thumbnail: data!.url,
+            publicid: data!.public_id,
             category: req.body.category,
             price: req.body.price,
             tags: req.body.tags,
@@ -23,9 +26,7 @@ export const postCourseHandler = async (
 
         res.status(200).json({
             status: 'success',
-            data: {
-                courses,
-            },
+            courses,
         });
     } catch (err: any) {
         next(err);
@@ -41,14 +42,31 @@ export const getCourseHandler = async (
         const course = await getCourseById(req.params.id);
         res.status(200).json({
             status: 'success',
-            data: {
+            
                 course,
-            },
+        
         });
     } catch (err: any) {
         next(err);
     }
 };
+
+export const getCoursesHandler =  async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const courses = await getAllCourses();
+        res.status(200).json({
+            status: "success",
+            courses
+        })
+
+    } catch (err: any) {
+        next(err)
+    }
+}
 
 export const updateContentHandler = async (
     req: Request,

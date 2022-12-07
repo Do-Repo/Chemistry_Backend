@@ -47,6 +47,14 @@ const updateCourse = async (id: string, input: Partial<Courses>) => {
     }
 };
 
+export const getAllCourses = async () => {
+    try {
+        const courses = await coursesModel.find();
+        return courses;
+    } catch (err: any) {
+        throw new Error(err);
+    }
+}
 
 export const  getCourseById = async (id: string) => {
     try {
