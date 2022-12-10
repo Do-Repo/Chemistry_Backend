@@ -1,43 +1,44 @@
-import userExtrasModel from '../models/user.extra';
+import { getExtras, addBoughtCourses } from '../services/user.extras.service';
+import { NextFunction, Request, Response } from "express";
 import { ObjectId } from 'mongoose';
 
-export const setOwner = async (id: string) => {
+export const getExtrasHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
-        return await userExtrasModel.findByIdAndUpdate(id, { owner: id }, { new: true, runValidators: true })
+        const user = res.locals.user;
+        console.log(user._id)
+        const extras = await getExtras(user.extras)
+        res.status(200).json({
+            status: 'success',
+            user,
+            extras,
+        });
     } catch (err: any) {
-        throw new Error(err);
+        next(err);
     }
 
 }
 
-export const createExtras = async () => {
+export const buyCourseHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
-        return await userExtrasModel.create({});
-    } catch (err: any) {
-        throw new Error(err);
+        const user = res.locals.user;
+        const course = req.body.courses;
+        const extras = await addBoughtCourses(user.extras, course)
+        res.status(200).json({
+            status: 'success',
+            user,
+            extras,
+        });
+    }
+    catch (err: any) {
+        next(err);
     }
 }
 
-export const getExtras = async (id: ObjectId) => {
-    try {
-        return await userExtrasModel.findById(id);
-    } catch (err: any) {
-        throw new Error(err);
-    }
-}
-
-export const addLikedCourse = async (id: ObjectId, courseId: ObjectId) => {
-    try {
-        return await userExtrasModel.findByIdAndUpdate(id, { $push: { likedCourses: courseId } }, { new: true, runValidators: true });
-    } catch (err: any) {
-        throw new Error(err);
-    }
-}
-
-export const removeLikedCourse = async (id: ObjectId, courseId: ObjectId) => {
-    try {
-        return await userExtrasModel.findByIdAndUpdate(id, { $pull: { likedCourses: courseId } }, { new: true, runValidators: true });
-    } catch (err: any) {
-        throw new Error(err);
-    }
-}

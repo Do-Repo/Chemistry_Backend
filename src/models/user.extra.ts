@@ -25,6 +25,9 @@ export class UserExtras {
 
     @prop({ required: false, maxlength: 200 })
     followingMentors: mongoose.Schema.Types.ObjectId[];
+
+    @prop({ required: false, maxlength: 200 })
+    boughtCourses: mongoose.Schema.Types.ObjectId[];
 }
 
 const userExtrasModel = getModelForClass(UserExtras);
