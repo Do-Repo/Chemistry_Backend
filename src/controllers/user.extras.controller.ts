@@ -33,8 +33,7 @@ export const buyCourseHandler = async (
         const extras = await addBoughtCourses(user.extras, course)
         res.status(200).json({
             status: 'success',
-            user,
-            extras,
+            extras
         });
     }
     catch (err: any) {
