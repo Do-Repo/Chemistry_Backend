@@ -18,7 +18,7 @@ import mongoose from 'mongoose';
 
 export class Tags {
     @prop({ required: true })
-    image: string;
+    colorCode: string;
 
     @prop({ required: true, minlength: 3, maxlength: 200 })
     name: string;
