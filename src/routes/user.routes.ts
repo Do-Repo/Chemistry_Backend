@@ -8,7 +8,7 @@ import { requireUser } from '../middleware/requireUser';
 import { restrictTo } from '../middleware/restrictTo';
 import { updateProfileHandler, verifyUserHandler, setProfilePictureHandler, deleteProfilePictureHandler } from '../controllers/user.controller';
 import { upload } from '../middleware/upload';
-import { getExtrasHandler } from '../controllers/user.extras.controller';
+import { getExtrasHandler, buyCourseHandler } from '../controllers/user.extras.controller';
 
 const router = express.Router();
 router.use(deserializeUser, requireUser);
@@ -22,5 +22,6 @@ router.get('/verify/:id/:token', verifyUserHandler);
 router.post('/upload/avatar', upload.single('userImage'), setProfilePictureHandler);
 router.delete('/delete/avatar', deleteProfilePictureHandler);
 router.get('/extras', getExtrasHandler);
+router.post('/extras/buy', buyCourseHandler);
 export default router;
 
