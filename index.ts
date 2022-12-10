@@ -9,11 +9,15 @@ import userRouter from './src/routes/user.routes';
 import authRouter from './src/routes/auth.routes';
 import courseRouter from './src/routes/courses.routes';
 import tagRouter from './src/routes/tags.routes';
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const app = express();
+const httpServer = createServer(app);
+export const io = new Server(httpServer, { /* options */ });
+
 
 // 1. Body Parser
-//app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(express.json())
 
 // 2. Cookie Parser
@@ -62,4 +66,8 @@ app.listen(port , host ,() => {
   console.log(`Server started on port: ${port}`);
   connectDB();
 });
+
+httpServer.listen(3002);
+
+
 
