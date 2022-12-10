@@ -67,7 +67,9 @@ app.listen(port , host ,() => {
   connectDB();
 });
 
-httpServer.listen(3002);
+httpServer.listen(3002), () => {
+  console.log('Connected socket on port 3002')
+};
 
 
 
