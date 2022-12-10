@@ -6,7 +6,7 @@ import { createUser, findUser, singToken } from '../services/user.service';
 import AppError from '../utils/appError';
 import crypto from 'crypto';
 import { sendEmail } from '../utils/email';
-import { createExtras, setOwner } from './user.extras.controller';
+import { createExtras, setOwner, getExtras } from '../services/user.extras.service';
 
 export const excludedFields = ['password'];
 
@@ -54,8 +54,7 @@ export const registerHandler = async (
         res.status(201).json({
             status: 'success',
             message: (emailSent) ? 'An Email has been sent to verify your account' : "Email could not be sent",
-            user,
-            
+            user,            
         })
     } catch (err: any) {
         console.log(req.body);
@@ -76,10 +75,13 @@ export const loginHandler = async (
 ) => {
     try {
         const user = await findUser({email: req.body.email});
+        
 
         if (!user || !(await user.comparePassword(user.password, req.body.password))) {
             return next(new AppError('Invalid email or password', 401));
         }
+
+        const extras = await getExtras(user.extras);
 
         const accessToken = await singToken(user);
 
@@ -93,6 +95,7 @@ export const loginHandler = async (
             status: 'success',
             accessToken,
             user,
+            extras
         });
     } catch (err: any) {
         next(err);
