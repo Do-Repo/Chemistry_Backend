@@ -20,7 +20,7 @@ export const getMeHandler = (
 }
 
 export const setProfilePictureHandler = async (
-    req: Request,
+    req: Request, 
     res: Response,
     next: NextFunction
 ) => {
