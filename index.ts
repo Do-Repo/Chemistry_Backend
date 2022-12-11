@@ -67,7 +67,11 @@ app.listen(port , host ,() => {
   connectDB();
 });
 
-httpServer.listen(3002);
+httpServer.listen(3002, () => {
+  console.log('Socket server started on port: 3002');
+});
 
-
-
+var handleEvents = require('./src/utils/socketEvents');
+io.on("connection", (socket) => {
+  handleEvents(socket);
+});

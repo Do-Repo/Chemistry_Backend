@@ -44,7 +44,7 @@ export const removeLikedCourse = async (id: ObjectId, courseId: ObjectId) => {
 
 export const addBoughtCourses = async (id: ObjectId, courseIds: ObjectId[]) => {
     try {
-        return await userExtrasModel.findByIdAndUpdate(id, { $push: { boughtCourses: courseIds } }, { new: true, runValidators: true });
+        return await userExtrasModel.findByIdAndUpdate(id, { $push: { boughtCourses: courseIds.forEach(item => {item}) } }, { new: true, runValidators: true });
     } catch (err: any) {
         throw new Error(err);
     }
