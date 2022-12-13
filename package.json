@@ -22,6 +22,7 @@
     "@types/node": "^18.11.9",
     "@types/nodemailer": "^6.4.6",
     "@types/sharp": "^0.31.0",
+    "@types/ws": "^8.5.3",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
     "ts-node-dev": "^2.0.0",
@@ -45,6 +46,7 @@
     "redis": "^4.5.0",
     "sharp": "^0.31.2",
     "socket.io": "^4.5.4",
+    "ws": "^8.11.0",
     "zod": "^3.19.1"
   }
 }

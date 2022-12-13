@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import config from 'config';
@@ -9,13 +10,15 @@ import userRouter from './src/routes/user.routes';
 import authRouter from './src/routes/auth.routes';
 import courseRouter from './src/routes/courses.routes';
 import tagRouter from './src/routes/tags.routes';
-import { createServer } from "http";
-import { Server } from "socket.io";
+import { handle_socket_events } from './src/utils/socketEvents';
+
+import * as http from 'http';
+import * as WebSocket from 'ws';
 
 const app = express();
-const httpServer = createServer(app);
-export const io = new Server(httpServer, { /* options */ });
 
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
 // 1. Body Parser
 app.use(express.json())
@@ -60,18 +63,21 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 
 const port = config.get<number>('port');
+const socketPort = config.get<number>('socketPort');
 const host = '0.0.0.0';
+
 
 app.listen(port , host ,() => {
   console.log(`Server started on port: ${port}`);
   connectDB();
 });
 
-httpServer.listen(3002, () => {
-  console.log('Socket server started on port: 3002');
+server.listen(socketPort, () => {
+  console.log(`Socket server started on port: ${socketPort}`);
+  
+  wss.on('connection', function connection(ws: WebSocket, req: any) {
+    handle_socket_events(ws, req);
+  })
+
 });
 
-var handleEvents = require('./src/utils/socketEvents');
-io.on("connection", (socket) => {
-  handleEvents(socket);
-});
