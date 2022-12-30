@@ -9,6 +9,7 @@ export const createUserSchema = object({
             .min(8)
             .max(100),
         passwordConfirm: string({ required_error: 'Password confirm is required' }),
+        role: string({ required_error: 'Role is required' }),
     }).refine((data) => data.password === data.passwordConfirm, {
         path: ['passwordConfirm'],
         message: 'Passwords do not match'

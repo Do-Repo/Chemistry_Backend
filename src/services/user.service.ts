@@ -10,8 +10,8 @@ import { DocumentType } from '@typegoose/typegoose';
 
 
 export const createUser = async (input: Partial<User>) => {
-    const user = await userModel.create(input);
-    return omit(user, excludedFields);
+    return await userModel.create(input);
+
 }
 
 export const updateUser = async (id: string, input: Partial<User>) => {

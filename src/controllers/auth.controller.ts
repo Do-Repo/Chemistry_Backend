@@ -27,44 +27,62 @@ export const registerHandler = async (
     res: Response,
     next: NextFunction
 ) => {
-    try {
-        console.log(req.body)
-        const extras = await createExtras();
-        if(!extras) throw new AppError('Error creating extras', 500);
-
-        const user = await createUser({
-            email: req.body.email,
-            password: req.body.password,
-            name: req.body.name,
-            phone: req.body.phone,
-            extras: extras._id,
-            avatarUrl: 'https://ui-avatars.com/api/?name=' + req.body.name ,
+    if(req.body.passwordConfirm !== req.body.password) {
+        return res.status(400).json({
+            status: 'fail',
+            message: 'Passwords do not match'
         })
+    }else{
+        try {
+            console.log(req.body)
+            const extras = await createExtras();
+            if(!extras) throw new AppError('Error creating extras', 500);
 
-        await setOwner(user._id);
-
-        let token = new Token({
-            userId: user._id,
-            token: crypto.randomBytes(32).toString("hex"),
-        }).save();
-
-        const message = `${process.env.BASE_URL}/user/verify/${user.id}/${(await token).token}`;
-        const emailSent = await sendEmail(req.body.email, "Verify Email", message);
-        console.log(req.body)
-        res.status(201).json({
-            status: 'success',
-            message: (emailSent) ? 'An Email has been sent to verify your account' : "Email could not be sent",
-            user,            
-        })
-    } catch (err: any) {
-        console.log(req.body);
-        if (err.code === 11000) {
-            return res.status(409).json({
-                status: 'fail',
-                message: 'Email already exists',
+            const name = req.body.name.replace(' ', '%20');
+    
+            const user = await createUser({
+                email: req.body.email,
+                password: req.body.password,
+                name: req.body.name,
+                phone: req.body.phone,
+                extras: extras._id,
+                role: req.body.role,
+                avatarUrl: 'https://ui-avatars.com/api/?name=' + name ,
             })
+    
+            await setOwner(user._id);
+    
+            let token = new Token({
+                userId: user._id,
+                token: crypto.randomBytes(32).toString("hex"),
+            }).save();
+
+            const accessToken = await singToken(user);
+
+            res.cookie('accessToken', accessToken, accessTokenCookieOptions);
+            res.cookie('logged_in', true, {
+                ...accessTokenCookieOptions,
+                httpOnly: false
+            });
+            const message = `${process.env.BASE_URL}/user/verify/${user.id}/${(await token).token}`;
+            const emailSent = await sendEmail(req.body.email, "Verify Email", message);
+
+            res.status(201).json({
+                status: 'success',
+                message: (emailSent) ? 'An Email has been sent to verify your account' : "Email could not be sent",
+                accessToken,
+                user,
+                extras            
+            })
+        } catch (err: any) {
+            if (err.code === 11000) {
+                return res.status(409).json({
+                    status: 'fail',
+                    message: 'Email already exists',
+                })
+            }
+            next(err);
         }
-        next(err);
     }
 }
 

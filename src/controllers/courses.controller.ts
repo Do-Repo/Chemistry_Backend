@@ -1,6 +1,6 @@
 import { addLike, removeLike, createCourse, getCourseById, updateContent, deleteCourse, checkIfMine, getAllCourses } from '../services/courses.service';
 import { NextFunction, Request, Response } from "express";
-import {  addLikedCourse, removeLikedCourse } from './user.extras.controller';
+import {  addLikedCourse, removeLikedCourse } from '../services/user.extras.service';
 import  { User } from '../models/user';
 import { uploadToCloudinary } from '../middleware/cloudinary';
 
@@ -13,20 +13,19 @@ export const postCourseHandler = async (
 ) => {
     try {
         const data = await uploadToCloudinary(req.file!.path, 'image');       
-        const courses = await createCourse({
+        const course = await createCourse({
             owner: res.locals.user._id,
             title: req.body.title,
             content: req.body.content,
             thumbnail: data!.url,
             publicid: data!.public_id,
-            category: req.body.category,
             price: req.body.price,
             tags: req.body.tags,
         });
 
         res.status(200).json({
             status: 'success',
-            courses,
+            course,
         });
     } catch (err: any) {
         next(err);

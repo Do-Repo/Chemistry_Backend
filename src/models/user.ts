@@ -35,7 +35,7 @@ export class User extends Document {
     @prop({ required: true })
     phone: string;
 
-    @prop({ required: true, default: 'user', enum: ['user', 'admin', 'teacher'] })
+    @prop({ required: true, default: 'Student', enum: ['Student', 'Admin', 'Teacher'] })
     role: string;
 
     @prop({ required: true, default: false })
