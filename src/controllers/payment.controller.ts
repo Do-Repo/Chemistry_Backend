@@ -36,7 +36,7 @@ export const createPaymentIntent = async (
         });
       
         res.send({
-        publishableKey: process.env.publishable_key, // https://stripe.com/docs/keys#obtain-api-keys
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY, // https://stripe.com/docs/keys#obtain-api-keys
         paymentIntent: paymentIntent.client_secret,
         customer: customer.id,
         ephemeralKey: ephemeralKey.secret
