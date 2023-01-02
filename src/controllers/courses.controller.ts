@@ -12,7 +12,7 @@ export const postCourseHandler = async (
     next: NextFunction
 ) => {
     try {
-        const data = await uploadToCloudinary(req.file!.path, 'image');       
+        const data = await uploadToCloudinary(req.file!.path, 'image');    
         const course = await createCourse({
             owner: res.locals.user._id,
             title: req.body.title,
@@ -28,6 +28,7 @@ export const postCourseHandler = async (
             course,
         });
     } catch (err: any) {
+        console.log(err);
         next(err);
     }
 };
@@ -41,9 +42,7 @@ export const getCourseHandler = async (
         const course = await getCourseById(req.params.id);
         res.status(200).json({
             status: 'success',
-            
-                course,
-        
+            course,  
         });
     } catch (err: any) {
         next(err);

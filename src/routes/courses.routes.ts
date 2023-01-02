@@ -3,14 +3,14 @@ import { requireUser } from '../middleware/requireUser';
 import { deserializeUser } from '../middleware/deserializeUser';
 import { getCourseHandler, addLikeHandler, removeLikeHandler, updateContentHandler, postCourseHandler, removeCourseHandler, getCoursesHandler } from '../controllers/courses.controller';
 import { createCourseSchema } from '../schema/courses.schema';
-import { validate } from '../middleware/validate';
+import { upload } from '../middleware/upload';
 import { buyCourseHandler } from '../controllers/user.extras.controller';
 
 const router = express.Router();
 router.use(deserializeUser, requireUser)
 
 router.get('/', getCoursesHandler);
-router.post('/create', validate(createCourseSchema) , postCourseHandler);
+router.post('/create', upload.single('thumbnail'), postCourseHandler);
 router.post('/like/:id', addLikeHandler);
 router.post('/dislike/:id', removeLikeHandler);
 router.post('/update/:id', updateContentHandler);

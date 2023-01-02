@@ -6,6 +6,7 @@ import {
     pre
 } from '@typegoose/typegoose';
 import mongoose from 'mongoose';
+import { Tags } from './tags';
 
 
 @index({ index: 1})
@@ -30,11 +31,8 @@ export class Courses {
     @prop({ required: true, minlength: 3, maxlength: 200 })
     thumbnail: string;
 
-    @prop({ required: true, minlength: 3, maxlength: 200 })
-    category: string;
-
     @prop({ required: true, minlength: 1, maxlength: 200 })
-    tags: string[];
+    tags: Tags[];
 
     @prop({ required: true, default: 0 })
     price: number;

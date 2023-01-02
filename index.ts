@@ -10,7 +10,9 @@ import userRouter from './src/routes/user.routes';
 import authRouter from './src/routes/auth.routes';
 import courseRouter from './src/routes/courses.routes';
 import tagRouter from './src/routes/tags.routes';
+import paymentRouter from './src/routes/payment.routes';
 import { handle_socket_events } from './src/utils/socketEvents';
+import bodyParser from 'body-parser';
 
 import * as http from 'http';
 import * as WebSocket from 'ws';
@@ -21,7 +23,9 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 // 1. Body Parser
-app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 
 // 2. Cookie Parser
 app.use(cookieParser());
@@ -42,6 +46,8 @@ app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/course', courseRouter);
 app.use('/api/tags', tagRouter);
+app.use('/api/payment', paymentRouter)
+
 
 // UnKnown Routes
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
